@@ -4,7 +4,7 @@ author: "Kara Andres"
 date: "5/9/2018"
 output:
   html_document:
-    df_print: paged
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,15 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Basics of spatial data
 
 Spatial data can come in 2 formats: vector or raster. Vector data is comprised of vertices and paths that connect to form points, lines, and polygons. "Shapefiles" are one of the most common vector formats you see in spatial data. Rasters, on the other hand, are made of a matrix of grid cells or pixels. 
-
 ```{r fig.width=5, fig.height=5,echo=FALSE}
 library(png)
 library(grid)
 img <- readPNG("vector_raster.png")
 grid.raster(img)
 ```
-
-
 ## Map projections 
 To view the Earth on our screen, we need to figure out how to represent a 3-D object on a 2-D plane. This can be accomplished by projecting the Earth onto a flat surface. Map projections necessarily involve the loss of some data:
 
@@ -34,23 +31,15 @@ To view the Earth on our screen, we need to figure out how to represent a 3-D ob
 * scale
 
 ### Mercator projection: preserves direction, but distorts size
-
-```{r fig.width=5, fig.height=5,echo=FALSE}
+```{r fig.width=5, fig.height=4,echo=FALSE}
 library(png)
 library(grid)
 img <- readPNG("mercator.png")
 grid.raster(img)
 ```
 
-
-Africa is actutally 14 times larger than Greenland! 
-
-
-![](westwing.jpg)
-
-
 ### Gall-Peters projection: preserves size, but distorts distance
-```{r fig.width=5, fig.height=5,echo=FALSE}
+```{r fig.width=5, fig.height=4,echo=FALSE}
 library(png)
 library(grid)
 img <- readPNG("peters.png")
@@ -180,7 +169,6 @@ plot(climate_change$ac85tx701)
 
 ```
 
-
 ## Making maps in ggplot
 Use `map_data` to turn map data into data frame that ggplot can read
 ```{r}
@@ -216,7 +204,6 @@ ggplot(data = us_pop) +
   theme_bw()
 
 ```
-
 
 
 ## Let's make a map! 
@@ -283,10 +270,6 @@ plot(watersheds, add = T)
 
 ```
 
-![](giphy.gif)
-
-
-
 Now, let's import our species localities. I have a .csv file with lat/longs for the location of each species collection. Recall that lat/longs are in a geographic coordinate system, and we need to project them into a projected coordinate system so they line up with our watersheds. 
 
 ```{r}
@@ -325,6 +308,3 @@ for (i in unique(localities_proj$Genus_spec)){
 ```
 
 Aaaaaaaand there you have it! #maps. 
-
-![](beautiful.gif)
-

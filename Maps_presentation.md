@@ -12,10 +12,7 @@ output:
 ## Basics of spatial data
 
 Spatial data can come in 2 formats: vector or raster. Vector data is comprised of vertices and paths that connect to form points, lines, and polygons. "Shapefiles" are one of the most common vector formats you see in spatial data. Rasters, on the other hand, are made of a matrix of grid cells or pixels. 
-
 ![](Maps_presentation_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
-
-
 ## Map projections 
 To view the Earth on our screen, we need to figure out how to represent a 3-D object on a 2-D plane. This can be accomplished by projecting the Earth onto a flat surface. Map projections necessarily involve the loss of some data:
 
@@ -26,15 +23,7 @@ To view the Earth on our screen, we need to figure out how to represent a 3-D ob
 * scale
 
 ### Mercator projection: preserves direction, but distorts size
-
 ![](Maps_presentation_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
-
-
-Africa is actutally 14 times larger than Greenland! 
-
-
-![](westwing.jpg)
-
 
 ### Gall-Peters projection: preserves size, but distorts distance
 ![](Maps_presentation_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
@@ -230,7 +219,6 @@ plot(climate_change$ac85tx701)
 
 ![](Maps_presentation_files/figure-html/maps-4.png)<!-- -->
 
-
 ## Making maps in ggplot
 Use `map_data` to turn map data into data frame that ggplot can read
 
@@ -300,7 +288,6 @@ ggplot(data = us_pop) +
 ```
 
 ![](Maps_presentation_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
-
 
 
 ## Let's make a map! 
@@ -448,10 +435,6 @@ plot(watersheds, add = T)
 
 ![](Maps_presentation_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
-![](giphy.gif)
-
-
-
 Now, let's import our species localities. I have a .csv file with lat/longs for the location of each species collection. Recall that lat/longs are in a geographic coordinate system, and we need to project them into a projected coordinate system so they line up with our watersheds. 
 
 
@@ -561,6 +544,3 @@ for (i in unique(localities_proj$Genus_spec)){
 ![](Maps_presentation_files/figure-html/illinois-1.png)<!-- -->
 
 Aaaaaaaand there you have it! #maps. 
-
-![](beautiful.gif)
-
