@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20180330</CreaDate><CreaTime>16561200</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files (x86)\arcgis\desktop10.3\ArcToolbox\Toolboxes\Conversion Tools.tbx\RasterToPolygon" Date="20160318" Time="104558">RasterToPolygon stream_int "C:\Users\andreskj\Documents\ArcGIS\Illinois fish_data\stream_polygon.shp" SIMPLIFY VALUE</Process></lineage></DataProperties></Esri></metadata>

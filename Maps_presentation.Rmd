@@ -1,7 +1,7 @@
 ---
 title: "Visualizing and manipulating spatial data in R"
 author: "Kara Andres"
-date: "5/9/2018"
+date: "4/12/2021"
 output:
   html_document:
     keep_md: true
@@ -15,12 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Basics of spatial data
 
 Spatial data can come in 2 formats: vector or raster. Vector data is comprised of vertices and paths that connect to form points, lines, and polygons. "Shapefiles" are one of the most common vector formats you see in spatial data. Rasters, on the other hand, are made of a matrix of grid cells or pixels. For simple maps, you'll most often work with shapefiles. 
+
 ```{r fig.width=5, fig.height=5,echo=FALSE}
 library(png)
 library(grid)
-img <- readPNG("vector_raster.png")
+img <- readPNG("Maps_presentation_files/vector_raster.png")
 grid.raster(img)
 ```
+
 ## Map projections 
 To view the Earth on our screen, we need to figure out how to represent a 3-D object on a 2-D plane. This can be accomplished by projecting the Earth onto a flat surface. Map projections necessarily involve the loss of some data:
 
@@ -34,7 +36,7 @@ To view the Earth on our screen, we need to figure out how to represent a 3-D ob
 ```{r fig.width=5, fig.height=4,echo=FALSE}
 library(png)
 library(grid)
-img <- readPNG("mercator.png")
+img <- readPNG("Maps_presentation_files/mercator.png")
 grid.raster(img)
 ```
 
@@ -42,11 +44,22 @@ grid.raster(img)
 ```{r fig.width=5, fig.height=4,echo=FALSE}
 library(png)
 library(grid)
-img <- readPNG("peters.png")
+img <- readPNG("Maps_presentation_files/peters.png")
 grid.raster(img)
 ```
 
-Important note! The default proejction in R is to use a rectangular projection with the aspect ratio chosen so that longitude and latitude scales are equivalent at the center of the picture. Thus, when working with data sources without defined projections, you may have to define the projection. I'll show an example of this later on. 
+Important note! The default projection in R is to use a rectangular projection with the aspect ratio chosen so that longitude and latitude scales are equivalent at the center of the picture. This might be okay for some areas, but for others you can get a funky display. Thus, when working with data sources without defined projections, you may have to define the projection. I'll show an example of this later on. 
+
+```{r fig.width=4, fig.height=3, echo=FALSE}
+library(ggplot2)
+library(maps)
+state <- map_data("state")
+ggplot(state, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill = "white", colour = "black")
+cali <- state[state$region=="california",] 
+ggplot(state[state$region=="california",], aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill = "white", colour = "black")
+```
 
 ## Some key spatial packages:
 * rgdal - reading, writing, converting between spatial data in dozens of formats
@@ -146,18 +159,7 @@ points(x = disney[2], y = disney[1], pch="*", cex=4, col = "yellow") # note the 
 
 ## Making maps with raster data 
 R can also call raster data from many databases. Beware: these can take a long time to download and can cause R to crash -- save your workspace before loading! 
-```{r maps, error=TRUE}
-
-# raster data
-france_sp <- raster:::getData("GADM",country="FRA",level=1) # level determines subdivision, e.g. states, counties, etc. 
-plot(france_sp)
-
-# Countries are coded by their 3-letter ISO codes. Find the list here:
-head(getData('ISO3'))
-
-# elevation data
-china_ele <- raster:::getData("alt",country="CHN")
-plot(china_ele)
+```{r maps, error=FALSE}
 
 # climate data - note temps are degrees C * 10
 world_temps <- raster:::getData('worldclim', var='tmin', res=10, lon=5, lat=45)
@@ -182,7 +184,7 @@ us_map<- ggplot(data = states) +
 us_map 
 
 # fill color of each state by population
-x <- read.csv("state_pop.csv", stringsAsFactors = FALSE)
+x <- read.csv("Maps_presentation_files/state_pop.csv", stringsAsFactors = FALSE)
 head(x)
 us_pop <- inner_join(states, x, by = "region")
 us_pop$Population<- as.numeric(us_pop$Population)
@@ -213,7 +215,7 @@ First, let's check out our streams file using the `readOGR` function to read in 
 
 ```{r}
 
-watersheds<- readOGR(dsn = "./Stream_HUC4/stream_HUC4.shp")
+watersheds <- readOGR(dsn = "Maps_presentation_files/Stream_HUC4/stream_HUC4.shp")
 summary(watersheds)
 plot(watersheds)
 ```
@@ -255,7 +257,7 @@ summary(watersheds)
 To get the Illinois map into a projected coordinate system, let's first create an object to store the projection information from the watersheds file and then project Illinois into a projected coordinate system:
 ```{r}
 
-UTMnad83<- CRS("+proj=utm +zone=16 +datum=NAD83 +units=m +no_defs +ellps=GRS80 +towgs84=0,0,0")
+UTMnad83<- CRS("+proj=utm +zone=16 +datum=NAD83 +units=m +no_defs")
 illinois_proj<- spTransform(illinois, UTMnad83) # transform to UTMnad83
 summary(illinois_proj)
 
@@ -274,25 +276,25 @@ Now, let's import our species localities. I have a .csv file with lat/longs for 
 
 ```{r}
 
-localities <- read.csv("illinois_localities.csv")
+localities <- read.csv("Maps_presentation_files/illinois_localities.csv")
 
 # create a spatial object with 'coordinates' function and DONT FORGET TO ORDER IN X,Y FORMAT: LONG,LAT  
 coordinates(localities)<- c("Longitude", "Latitude") 
 summary(localities)
 
 proj4string(localities) <- CRS("+proj=longlat +datum=NAD83") # define projection
-localities_proj<- spTransform(localities, UTMnad83) # transform to nad83
+localities_proj<- spTransform(localities, UTMnad83) # transform to UTMnad83
 summary(localities_proj)
 ```
 
 Now we have everything in order, and we can plot up our spatial objects! Remember that I need to shade my unique watersheds and individual species in unique colors. This is made easy with palettes in RColorBrewer. 
 
-```{r illinois, fig.height = 7, fig.width = 5}
+```{r illinois}
 
 water_pal<- brewer.pal(n = 5, name = "Blues") # for my streams 
-species_pal<- brewer.pal(n = 6, name = "Set1")
+species_pal<- brewer.pal(n = 6, name = "Dark2")
 
-plot(illinois_proj, border = "gray55") # plot projected illinois shapefile
+plot(illinois_proj, col="gray24") # plot projected illinois shapefile
 water_col <- 1 # create number to call for indexing colors from palette
 for (i in unique(watersheds$HUC4)){
   plot(watersheds[watersheds$HUC4 == i, ], add=T, border = water_pal[water_col], col = water_pal[water_col]) # plot each watershed in a different color
@@ -301,10 +303,89 @@ for (i in unique(watersheds$HUC4)){
 
 species_col<- 1 
 for (i in unique(localities_proj$Genus_spec)){
-  plot(localities_proj[localities_proj$Genus_spec == i, ], add=T, pch = 21, bg = species_pal[species_col], col = "black", cex = 2)
+  plot(localities_proj[localities_proj$Genus_spec == i, ], add=T, pch = 21, bg = species_pal[species_col], col = "black", cex = 1.3)
   species_col<- species_col+1
 }
 
+legend("topright", unique(localities_proj$Genus_spec), pch=21, pt.bg=species_pal, col="black", bty="n", text.font=3)
 ```
+
+
+## Another example
+Let's make another sampling map of sampling locations around a lake using different sampling gears. We have lat/longs of our sampling locations and have downloaded shapefiles of U.S. lakes from ArcGIS. Our map will also include a scale bar and an inset map of the northeastern U.S.
+
+```{r, message=FALSE, warning=FALSE}
+all_sampling_points <- read.csv("Maps_presentation_files/all_sampling_points.csv")
+ef_dat <- read.csv("Maps_presentation_files/EF spring std site locations2.csv")
+lakes <- readOGR("Maps_presentation_files/ne_10m_lakes") # file path to lake shapefile
+lakes <- lakes[complete.cases(lakes$name), ]
+great_lakes_map <- subset(lakes, name==c("Lake Ontario","Lake Erie"))
+oneida_map <- subset(lakes, name=="Oneida Lake")
+```
+
+First, we'll make the main sampling map. 
+
+```{r,  message=FALSE, warning=FALSE}
+mapbox <- c(-76.14, 43.14, -75.7, 43.3) # specify map boundaries
+oneida_lake <- get_map(location = mapbox, source = "stamen", 
+                       maptype = "terrain", zoom = 13)
+# Could pull up google maps if you have a license 
+cols <- c(brewer.pal(8, "Dark2"),"#386CB0")
+
+oneida_lake_map <- ggmap(oneida_lake) +
+  geom_point(data=all_sampling_points, 
+             mapping=aes(x=long, y=lat, color=gear, shape=gear), 
+             size=3, stroke = 1.2) +
+  scale_color_manual(values=cols[c(4,9,6,3,1)]) +
+  scale_shape_manual(values=c(17,5,3,16,6)) +
+  geom_line(data=ef_dat, aes(x=long, y=lat, group=Description), 
+            color="white", size=0.5) +
+  theme(axis.text.x = element_blank(), 
+        axis.text.y = element_blank(), axis.ticks = element_blank(),
+        rect = element_blank(), axis.title.y=element_blank(),
+        axis.title.x=element_blank()) +
+  ggsn::scalebar(location = "bottomleft", x.min = -76.13, x.max = -75.7, 
+           y.min = 43.145, y.max = 43.25, 
+           dist = 5, dist_unit="km", transform = TRUE, 
+           model = "WGS84", height = 0.05, 
+           st.dist = 0.05, st.bottom=FALSE)
+oneida_lake_map
+```
+
+Now for the inset map of the northeastern U.S.
+
+```{r, fig.width=4, fig.height=3, message=FALSE, warning=FALSE}
+library(cowplot)
+region_map <- ggplot() + 
+  geom_polygon(data=map_data("state"), 
+               aes(x=long, y=lat,group=group), color="white") + 
+  geom_polygon(data=great_lakes_map, 
+               aes(x=long, y=lat, group=group), 
+               color="lightblue", fill="lightblue") + 
+  geom_polygon(data=oneida_map, aes(x=long, y=lat, group=group), 
+               color="lightblue", fill="lightblue") + 
+  coord_cartesian(xlim=c(-79, -70), ylim = c(40.05, 45.5)) +
+  geom_rect(aes(xmin=-76.2, xmax=-75.67, ymin=43.05, ymax=43.4),
+            fill = "transparent", color = "red", size = 0.5) +
+  theme_map() + theme(panel.background = element_rect(fill = "white"))
+region_map
+```
+
+Putting it all together: 
+
+```{r, fig.width=8, fig.height=5, fig.align="center"}
+inset_map <- ggdraw() + draw_plot(oneida_lake_map) +
+  draw_plot(region_map, x = 0.62, y = 0.6, width = 0.26, height = 0.26)
+inset_map
+```
+
+## Other resources 
+https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html
+
+https://www.molecularecologist.com/2012/09/18/making-maps-with-r/
+
+https://geocompr.robinlovelace.net/adv-map.html
+
+^ includes a tutorial for animated and interactive maps!
 
 Aaaaaaaand there you have it! #maps. 
