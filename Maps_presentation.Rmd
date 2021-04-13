@@ -4,7 +4,8 @@ author: "Kara Andres"
 date: "4/12/2021"
 output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -383,6 +384,8 @@ inset_map
 https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html
 
 https://www.molecularecologist.com/2012/09/18/making-maps-with-r/
+
+https://mgimond.github.io/Spatial/mapping-data-in-r.html
 
 https://geocompr.robinlovelace.net/adv-map.html
 

@@ -328,6 +328,7 @@ inset_map
 ## Other resources 
 https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html
 https://www.molecularecologist.com/2012/09/18/making-maps-with-r/
+https://mgimond.github.io/Spatial/mapping-data-in-r.html
 https://geocompr.robinlovelace.net/adv-map.html
 ^ includes a tutorial for animated and interactive maps!
 
