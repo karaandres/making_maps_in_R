@@ -14,7 +14,7 @@ output:
 
 Spatial data can come in 2 formats: vector or raster. Vector data is comprised of vertices and paths that connect to form points, lines, and polygons. "Shapefiles" are one of the most common vector formats you see in spatial data. Rasters, on the other hand, are made of a matrix of grid cells or pixels. For simple maps, you'll most often work with shapefiles. 
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-1-1.png)<!-- -->
 
 ## Map projections 
 To view the Earth on our screen, we need to figure out how to represent a 3-D object on a 2-D plane. This can be accomplished by projecting the Earth onto a flat surface. Map projections necessarily involve the loss of some data:
@@ -26,14 +26,14 @@ To view the Earth on our screen, we need to figure out how to represent a 3-D ob
 * scale
 
 ### Mercator projection: preserves direction, but distorts size
-![](Maps_presentation_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-2-1.png)<!-- -->
 
 ### Gall-Peters projection: preserves size, but distorts distance
-![](Maps_presentation_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-3-1.png)<!-- -->
 
 Important note! The default projection in R is to use a rectangular projection with the aspect ratio chosen so that longitude and latitude scales are equivalent at the center of the picture. This might be okay for some areas, but for others you can get a funky display. Thus, when working with data sources without defined projections, you may have to define the projection. I'll show an example of this later on. 
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-4-1.png)<!-- -->![](Maps_presentation_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-4-1.png)<!-- -->![](Maps_presentation_files/unnamed-chunk-4-2.png)<!-- -->
 
 ## Some key spatial packages:
 * rgdal - reading, writing, converting between spatial data in dozens of formats
@@ -73,7 +73,7 @@ Maps can be created in base R or ggplot. The `map` function uses map databases t
 map(database = "world", regions = "Russia", col = "gray", fill = TRUE)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-6-1.png)<!-- -->
 
 However, different databases can have different names, extents, resolution, etc. 
 
@@ -93,7 +93,7 @@ There's no 'Russia' map in the worldHires database, but there is a USSR.
 map(database = "worldHires", regions = "USSR", col = "gray", fill = TRUE)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-8-1.png)<!-- -->
 
 
 You can change the projection of your map with the `projection` and `parameters` arguments. 
@@ -107,19 +107,19 @@ map('world', projection = 'mercator', wrap =TRUE, col = rainbow (7), fill = TRUE
 ## rainbow(7), : projection failed for some data
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 map('world', projection = 'gall', wrap =TRUE, parameters = 45, col = rainbow (7), fill = TRUE)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-9-2.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-9-2.png)<!-- -->
 
 ```r
 map('world', projection = 'polyconic', wrap = TRUE, col = rainbow (7), fill = TRUE)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-9-3.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-9-3.png)<!-- -->
 
 ## Clipping maps 
 `xlim()` and `ylim()` can be useful for clipping your map to the region of interest. To determine the current bounds of your map, you can use `min()` and `max()` arguments on your stored map object. Then you can change the min/max in the plot `map` arguments.  
@@ -128,7 +128,7 @@ map('world', projection = 'polyconic', wrap = TRUE, col = rainbow (7), fill = TR
 USA<- map(database = "world", regions = "usa", col = "green", fill = TRUE)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 min(USA$x, na.rm = T)
@@ -160,7 +160,7 @@ Alternatively, you can use the `locator()` function to return the x and y coordi
 map(database = "world", regions = "usa", col = "green", fill = TRUE, xlim = c(-180.97763, -54.55716), ylim = c(9.426121, 76.765763))
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-11-1.png)<!-- -->
 
 You can select multiple regions, colors, and can layer maps from multiple databases. You can also add elements with `points` at any latitude and longitude. Note that y is latitude and x is longitude in maps -- don't get these mixed up! 
 
@@ -172,7 +172,7 @@ disney<- c(28.3852, -81.5639) # latitude/longitude points for Disney world
 points(x = disney[2], y = disney[1], pch="*", cex=4, col = "yellow") # note the switching of lat/long to work with x/y 
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-12-1.png)<!-- -->
 
 ## Making maps with raster data 
 R can also call raster data from many databases. Beware: these can take a long time to download and can cause R to crash -- save your workspace before loading! 
@@ -183,7 +183,7 @@ world_temps <- raster:::getData('worldclim', var='tmin', res=10, lon=5, lat=45)
 plot(world_temps$tmin1)
 ```
 
-![](Maps_presentation_files/figure-html/maps-1.png)<!-- -->
+![](Maps_presentation_files/maps-1.png)<!-- -->
 
 ```r
 # future climate data 
@@ -248,7 +248,7 @@ climate_change <- raster:::getData('CMIP5', var='tmax', res=10, rcp=85, model='A
 plot(climate_change$ac85tx701)
 ```
 
-![](Maps_presentation_files/figure-html/maps-2.png)<!-- -->
+![](Maps_presentation_files/maps-2.png)<!-- -->
 
 ## Making maps in ggplot
 Use `map_data` to turn map data into data frame that ggplot can read
@@ -277,7 +277,7 @@ us_map<- ggplot(data = states) +
 us_map 
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-13-1.png)<!-- -->
 
 ```r
 # fill color of each state by population
@@ -304,7 +304,7 @@ ggplot(data = us_pop) +
   theme_bw()
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-13-2.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-13-2.png)<!-- -->
 
 A couple quick fixes to make this plot a little nicer: `coord_map()` gives a localized aspect ratio, `low` and `high` change the color gradient, and `trans` puts population on a log scale.   
 
@@ -318,7 +318,7 @@ ggplot(data = us_pop) +
   theme_bw()
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-14-1.png)<!-- -->
 
 
 ## Let's make a map! 
@@ -366,7 +366,7 @@ summary(watersheds)
 plot(watersheds)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-15-1.png)<!-- -->
 
 We can see from the summary that this is a polygon shapefile that is projected in the UTM NAD83 zone 16 projection (more on that later). We can also see that there is an attribute for HUC4; this defines the code for each watershed in the state of Illinois. Next, let's get a map of the state:
 
@@ -375,7 +375,7 @@ We can see from the summary that this is a polygon shapefile that is projected i
 illinois<- map("state", regions = "Illinois", fill = T)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-16-1.png)<!-- -->
 
 Looks great! Now, let's put our streams on the map:
 
@@ -385,7 +385,7 @@ map("state", regions = "Illinois")
 plot(watersheds, add = T)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-17-1.png)<!-- -->
 
 What happened?? We just saw that our streams and our state plot out separately, but are not lining up when plotted together. If you recall, our watersheds are defined by the UTM NAD83 **projected coordinate system**, while we never defined a projection for our Illinois map. However, I looked up the metadata for the US Census Bureau (where the data from the 'state' database comes from) and their map data is in the NAD83 **geographic coordinate system**. There are a lot of differences between geographic and projected coordinate systems, but for now we can just understand that the units in a geographic coordinate system are decimal degrees (e.g. lat/longs), while the units in a projected coordinate system are feet/meters. 
 
@@ -460,7 +460,7 @@ plot(illinois_proj)
 plot(watersheds, add = T)
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-21-1.png)<!-- -->
 
 Now, let's import our species localities. I have a .csv file with lat/longs for the location of each species collection. Recall that lat/longs are in a geographic coordinate system, and we need to project them into a projected coordinate system so they line up with our watersheds. 
 
@@ -569,7 +569,7 @@ for (i in unique(localities_proj$Genus_spec)){
 legend("topright", unique(localities_proj$Genus_spec), pch=21, pt.bg=species_pal, col="black", bty="n", text.font=3)
 ```
 
-![](Maps_presentation_files/figure-html/illinois-1.png)<!-- -->
+![](Maps_presentation_files/illinois-1.png)<!-- -->
 
 
 ## Another example
@@ -626,7 +626,7 @@ oneida_lake_map <- ggmap(oneida_lake) +
 oneida_lake_map
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-24-1.png)<!-- -->
 
 Now for the inset map of the northeastern U.S.
 
@@ -648,7 +648,7 @@ region_map <- ggplot() +
 region_map
 ```
 
-![](Maps_presentation_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](Maps_presentation_files/unnamed-chunk-25-1.png)<!-- -->
 
 Putting it all together: 
 
@@ -659,7 +659,7 @@ inset_map <- ggdraw() + draw_plot(oneida_lake_map) +
 inset_map
 ```
 
-<img src="Maps_presentation_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" />
+<img src="Maps_presentation_files/unnamed-chunk-26-1.png" style="display: block; margin: auto;" />
 
 ## Other resources 
 https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html

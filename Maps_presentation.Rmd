@@ -10,7 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 chooseCRANmirror(graphics=FALSE, ind=1)
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.path='Maps_presentation_files/')
 ```
 
 ## Basics of spatial data
@@ -160,7 +160,7 @@ points(x = disney[2], y = disney[1], pch="*", cex=4, col = "yellow") # note the 
 
 ## Making maps with raster data 
 R can also call raster data from many databases. Beware: these can take a long time to download and can cause R to crash -- save your workspace before loading! 
-```{r maps, error=FALSE}
+```{r maps, error=FALSE, warning=FALSE, message=FALSE}
 
 # climate data - note temps are degrees C * 10
 world_temps <- raster:::getData('worldclim', var='tmin', res=10, lon=5, lat=45)
