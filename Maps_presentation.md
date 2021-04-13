@@ -89,11 +89,6 @@ You can change the projection of your map with the `projection` and `parameters`
 map('world', projection = 'mercator', wrap =TRUE, col = rainbow (7), fill = TRUE)
 ```
 
-```
-## Warning in map("world", projection = "mercator", wrap = TRUE, col =
-## rainbow(7), : projection failed for some data
-```
-
 ![](Maps_presentation_files/unnamed-chunk-8-1.png)<!-- -->
 
 ## Clipping maps 

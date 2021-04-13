@@ -107,7 +107,7 @@ map(database = "worldHires", regions = "USSR", col = "gray", fill = TRUE)
 ```
 
 You can change the projection of your map with the `projection` and `parameters` arguments. 
-```{r, fig.width=5, fig.height=5}
+```{r, fig.width=5, fig.height=5, message = FALSE, warning=FALSE}
 map('world', projection = 'mercator', wrap =TRUE, col = rainbow (7), fill = TRUE)
 ```
 
